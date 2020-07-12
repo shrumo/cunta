@@ -22,6 +22,10 @@ find_or_fetch_package(fmt)
 
 And that's it! You will use fmt from your system, if it is available and if not you will build it from sources.
 
+## Dependencies
+
+CMake 3.11 and above.
+
 ## Setup
 
 TL;DR

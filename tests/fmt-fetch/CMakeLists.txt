@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.11)
 
 project(cunta_fmt_fetch_test)
 include(../../cunta.cmake)
