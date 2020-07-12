@@ -33,7 +33,7 @@ function (find_git_package package)
         message("fmt added as a target")
     endif()
 
-    # glfw3, added by shrumo
+    # glfw3, added by shrumo, zlib/libpng
     if (${package} STREQUAL glfw3)
         message("glfw3 was found, looking for version " ${version})
         FetchContent_Declare(
@@ -48,6 +48,40 @@ function (find_git_package package)
         endif()
         set(${package}_GIT_FOUND 1 PARENT_SCOPE)
         message("glfw added as a target")
+    endif()
+
+    # bgfx, added by shrumo, BSD 2-Clause
+    if (${package} STREQUAL bgfx)
+        find_package(Git QUIET)
+        
+        message("bgfx was found, there is only one version")
+        if(NOT GIT_FOUND)
+            message(STATUS "bgfx requires git to be build by cunta")
+        endif()
+        FetchContent_Declare(
+            bgfx
+            GIT_REPOSITORY https://github.com/widberg/bgfx.cmake.git
+        )
+    
+        # Fetch the content 
+        FetchContent_GetProperties(bgfx)
+        if(NOT bgfx_POPULATED)
+          FetchContent_Populate(bgfx)
+        endif()       
+
+        # We need to initialize the submodules 
+        # Update submodules as needed
+        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+                        WORKING_DIRECTORY ${bgfx_SOURCE_DIR}
+                        RESULT_VARIABLE GIT_SUBMOD_RESULT)
+        if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+            message(FATAL_ERROR "git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout bgfx submodules manually")
+        endif()
+
+        add_subdirectory(${bgfx_SOURCE_DIR} ${bgfx_BINARY_DIR})
+
+        set(${package}_GIT_FOUND 1 PARENT_SCOPE)
+        message("bgfx added as a target")
     endif()
 
     # Respond with correct messages if package was not found
