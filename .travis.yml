@@ -11,15 +11,7 @@ matrix:
             packages:
                 - cmake-data
                 - cmake
-    - addons:
-        apt:
-            sources:
-                - ubuntu-toolchain-r-test    
-                - george-edison55-precise-backports
-            packages:
-                - cmake-data
-                - cmake
-                - libfmt-dev
+                - libdfmt-dev
 
 script:
     - cd scripts
