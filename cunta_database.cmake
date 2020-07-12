@@ -5,6 +5,7 @@
 function (find_git_package package) 
     message("Looking up cunta database for " ${package} " " ${version})
 
+
     # Parse the first non specified argument
     if(${ARGC} GREATER "0")
         if(${ARGV1} MATCHES "^[0-9]*(\.[0-9]*(\.[0-9]*(\.[0-9]*)))$") 
@@ -29,6 +30,7 @@ function (find_git_package package)
           add_subdirectory(${fmt_SOURCE_DIR} ${fmt_BINARY_DIR})
         endif()
         set(${package}_GIT_FOUND 1 PARENT_SCOPE)
+        message("fmt added as a target")
     endif()
 
     # glfw3, added by shrumo
@@ -45,6 +47,7 @@ function (find_git_package package)
           add_subdirectory(${glfw3_SOURCE_DIR} ${glfw3_BINARY_DIR})
         endif()
         set(${package}_GIT_FOUND 1 PARENT_SCOPE)
+        message("glfw added as a target")
     endif()
 
     # Respond with correct messages if package was not found
