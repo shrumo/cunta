@@ -74,3 +74,4 @@ include(cmake/cunta.cmake)
 ## Currently supported
 
 * fmt
+* glfw3
