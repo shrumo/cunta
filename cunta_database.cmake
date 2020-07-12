@@ -101,14 +101,21 @@ function (find_git_package package)
         message("glm::glm added as a target")
     endif()
 
-    # Respond with correct messages if package was not found
-    if(NOT ${${package}_GIT_FOUND})
-        set(message_level "STATUS")
-        if("REQUIRED" IN_LIST ARGV)
-            set(message_level "FATAL_ERROR")
+    # raylib, added by shrumo, zlib
+    if (${package} STREQUAL raylib)
+        message("raylib was found, looking for version " ${version})
+        FetchContent_Declare(
+            raylib
+            GIT_REPOSITORY https://github.com/raysan5/raylib.git
+            GIT_TAG ${version}
+        )
+        FetchContent_GetProperties(raylib)
+        if(NOT raylib_POPULATED)
+          FetchContent_Populate(raylib)
+          add_subdirectory(${raylib_SOURCE_DIR} ${raylib_BINARY_DIR})
         endif()
-        if(NOT "QUIET" IN_LIST ARGV) 
-            message(${message_level} ${package} " not found.") 
-        endif()
+        set(${package}_GIT_FOUND 1 PARENT_SCOPE)
+        message("raylib added as a target")
     endif()
+
 endfunction()
