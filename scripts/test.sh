@@ -1,6 +1,7 @@
 #!/bin/bash -v
 
 SCRIPT_LOCATION="$(pwd)/${0%/*}"
+cd ${SCRIPT_LOCATION}
 
 # Go through each test and try building it
 SUCCESS=true
