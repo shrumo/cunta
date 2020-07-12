@@ -5,7 +5,6 @@
 function (find_git_package package) 
     message("Looking up cunta database for " ${package} " " ${version})
 
-
     # Parse the first non specified argument
     if(${ARGC} GREATER "0")
         if(${ARGV1} MATCHES "^[0-9]*(\.[0-9]*(\.[0-9]*(\.[0-9]*)))$") 
@@ -16,7 +15,7 @@ function (find_git_package package)
     # Set the found variable to false 
     set(${package}_GIT_FOUND 0 PARENT_SCOPE)
 
-    # fmt, added by shrumo
+    # fmt, added by shrumo, MIT license
     if (${package} STREQUAL fmt) 
         message("fmt was found, looking for version " ${version})
         FetchContent_Declare(

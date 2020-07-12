@@ -77,3 +77,27 @@ include(cmake/cunta.cmake)
 * glfw3
 * bgfx
 * glm
+* raylib
+
+
+## Problems
+
+There is a problem, when a target with the same name is created by a previous import
+you cannot create it with the current import. Example:
+
+```
+find_or_fetch_package(raylib)
+find_or_fetch_package(glfw)
+```
+
+Leads to:
+
+```
+CMake Error at build/_deps/raylib-src/src/external/glfw/src/CMakeLists.txt:96 (add_library):
+  add_library cannot create target "glfw" because an imported target with the
+  same name already exists.
+```
+
+This can be solved in various ways. One of them is use the target provided by the other target.
+Some other ugly hack might be to redefine `add_subdirectory`. (but we [shouldn't redefine CMake commands](https://crascit.com/2018/09/14/do-not-redefine-cmake-commands/))
+If anyone cares I will solve it. 
