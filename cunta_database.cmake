@@ -22,7 +22,6 @@ function (find_git_package package)
             fmt
             GIT_REPOSITORY https://github.com/fmtlib/fmt.git
             GIT_TAG ${version}
-            QUIET
         )
         FetchContent_GetProperties(fmt)
         if(NOT fmt_POPULATED)
@@ -32,9 +31,24 @@ function (find_git_package package)
         set(${package}_GIT_FOUND 1 PARENT_SCOPE)
     endif()
 
+    # glfw3, added by shrumo
+    if (${package} STREQUAL glfw3)
+        message("glfw3 was found, looking for version " ${version})
+        FetchContent_Declare(
+            glfw3
+            GIT_REPOSITORY https://github.com/glfw/glfw.git
+            GIT_TAG ${version}
+        )
+        FetchContent_GetProperties(glfw3)
+        if(NOT glfw3_POPULATED)
+          FetchContent_Populate(glfw3)
+          add_subdirectory(${glfw3_SOURCE_DIR} ${glfw3_BINARY_DIR})
+        endif()
+        set(${package}_GIT_FOUND 1 PARENT_SCOPE)
+    endif()
 
     # Respond with correct messages if package was not found
-    if(NOT ${package}_GIT_FOUND)
+    if(NOT ${${package}_GIT_FOUND})
         set(message_level "STATUS")
         if("REQUIRED" IN_LIST ARGV)
             set(message_level "FATAL_ERROR")
