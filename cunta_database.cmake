@@ -30,7 +30,7 @@ function (find_git_package package)
           add_subdirectory(${fmt_SOURCE_DIR} ${fmt_BINARY_DIR})
         endif()
         set(${package}_GIT_FOUND 1 PARENT_SCOPE)
-        message("fmt added as a target")
+        message("fmt::fmt added as a target")
     endif()
 
     # glfw3, added by shrumo, zlib/libpng
@@ -82,6 +82,23 @@ function (find_git_package package)
 
         set(${package}_GIT_FOUND 1 PARENT_SCOPE)
         message("bgfx added as a target")
+    endif()
+
+    # glm, added by shrumo, Happy Bunny License (MIT, but you need to keep bunnies happy)
+    if (${package} STREQUAL glm)
+        message("glm was found, looking for version " ${version})
+        FetchContent_Declare(
+            glm
+            GIT_REPOSITORY https://github.com/g-truc/glm.git
+            GIT_TAG ${version}
+        )
+        FetchContent_GetProperties(glm)
+        if(NOT glm_POPULATED)
+          FetchContent_Populate(glm)
+          add_subdirectory(${glm_SOURCE_DIR} ${glm_BINARY_DIR})
+        endif()
+        set(${package}_GIT_FOUND 1 PARENT_SCOPE)
+        message("glm::glm added as a target")
     endif()
 
     # Respond with correct messages if package was not found
