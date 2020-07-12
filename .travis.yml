@@ -1,0 +1,27 @@
+dist: trusty
+language: cpp
+compiler: gcc
+
+matrix:
+    - addons:
+        apt:
+            sources:
+                - ubuntu-toolchain-r-test    
+            packages:
+                - cmake
+    - addons:
+        apt:
+            sources:
+                - ubuntu-toolchain-r-test    
+            packages:
+                - cmake
+                - libfmt-dev
+
+script:
+    - cd tests
+    - cd fmt-fetch
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make -j4
+    - ./test 
