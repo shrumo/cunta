@@ -1,5 +1,7 @@
 # cunta
 
+[![Build Status](https://travis-ci.com/shrumo/cunta.svg?branch=master)](https://travis-ci.com/shrumo/cunta)
+
 This provides a CMake function, simililar to `find_package`, that will
 also fetch the packages from git (using `FetchContent`) that are not found. 
 
