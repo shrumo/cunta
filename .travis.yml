@@ -9,7 +9,7 @@ matrix:
                 - ubuntu-toolchain-r-test    
             packages:
                 # - cmake
-                - libdfmt-dev
+                - libfmt-dev
 
 install:
     - ${CXX} --version
