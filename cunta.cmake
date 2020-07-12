@@ -11,6 +11,7 @@ function (fetch_package_with_database package)
         include(${cunta_database_SOURCE_DIR}/cunta_database.cmake)
     endif()
     find_git_package(${ARGV})
+    set(${package}_GIT_FOUND ${${package}_GIT_FOUND})
 endfunction()
     
 
