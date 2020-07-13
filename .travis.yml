@@ -11,6 +11,7 @@ matrix:
                 - cmake
                 - libfmt-dev
                 - libprotobuf-dev
+                - protobuf-compiler
 
 install:
     - cmake --version
