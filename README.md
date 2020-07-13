@@ -5,7 +5,7 @@
 This provides a CMake function, simililar to `find_package`, that will
 also fetch the packages from git (using `FetchContent`) that are not found. 
 
-You probably don't want to use this. Probably, you'd be better of with [Conan](https://conan.io/),
+You probably **don't** want to use this. Probably, you'd be better of with [Conan](https://conan.io/),
  [vcpkg](https://github.com/microsoft/vcpkg), or other package managers. This builds the packages,
 offers no caching across projects and is generally just to improve prototyping speed.
 
@@ -25,7 +25,8 @@ And that's it! You will use fmt from your system, if it is available and if not 
 
 ## Dependencies
 
-CMake 3.11 and above.
+CMake 3.11 and above and git for packages that require submodules. 
+Also, you need to be able to build those packages themselves.
 
 ## Adding stuff
 
@@ -33,9 +34,11 @@ If you are interested (but I doubt it), feel free to send Pull Requests with mor
 
 ## Setup
 
-TL;DR
+### TL;DR
 
-The setup is just downloading somehow the `cunta.cmake` file and making sure it is included from your CMakeLists.txt.
+The setup is just downloading somehow the `cunta.cmake` file and making sure it is included from your CMakeLists.txt
+(for example if cunta.cmake is in cmake directory you would add `include(cmake/cunta.cmake`)
+
 
 ### Step by step
 
