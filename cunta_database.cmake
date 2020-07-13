@@ -1,8 +1,22 @@
+# Sets up the database for things that are simple to fetch from git
+function (setup_cunta_database) 
+    # fmt, added by shrumo, MIT license
+    list(APPEND cunta_database "fmt https://github.com/fmtlib/fmt.git") 
+    # glfw3, added by shrumo, zlib/libpng
+    list(APPEND cunta_database "glfw3 https://github.com/glfw/glfw.git")
+    # glm, added by shrumo, Happy Bunny License (MIT, but you need to keep bunnies happy)
+    list(APPEND cunta_database "glm https://github.com/g-truc/glm.git")
+    # raylib, added by shrumo, zlib
+    list(APPEND cunta_database "raylib https://github.com/raysan5/raylib.git")
+    set(cunta_database ${cunta_database} PARENT_SCOPE)
+endfunction()
+
 # Looks for the package in a list of predefined git repositories.
 # Functions like a database saying how each project is defined and
 # can be fetched.
 # find_git_package(<package> [version] [QUIET] [REQUIRED])
 function (find_git_package package) 
+    setup_cunta_database()
     message("Looking up cunta database for " ${package} " " ${version})
 
     # Parse the first non specified argument
@@ -14,40 +28,6 @@ function (find_git_package package)
 
     # Set the found variable to false 
     set(${package}_GIT_FOUND 0 PARENT_SCOPE)
-
-    # fmt, added by shrumo, MIT license
-    if (${package} STREQUAL fmt) 
-        message("fmt was found, looking for version " ${version})
-        FetchContent_Declare(
-            fmt
-            GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-            GIT_TAG ${version}
-        )
-        FetchContent_GetProperties(fmt)
-        if(NOT fmt_POPULATED)
-          FetchContent_Populate(fmt)
-          add_subdirectory(${fmt_SOURCE_DIR} ${fmt_BINARY_DIR})
-        endif()
-        set(${package}_GIT_FOUND 1 PARENT_SCOPE)
-        message("fmt::fmt added as a target")
-    endif()
-
-    # glfw3, added by shrumo, zlib/libpng
-    if (${package} STREQUAL glfw3)
-        message("glfw3 was found, looking for version " ${version})
-        FetchContent_Declare(
-            glfw3
-            GIT_REPOSITORY https://github.com/glfw/glfw.git
-            GIT_TAG ${version}
-        )
-        FetchContent_GetProperties(glfw3)
-        if(NOT glfw3_POPULATED)
-          FetchContent_Populate(glfw3)
-          add_subdirectory(${glfw3_SOURCE_DIR} ${glfw3_BINARY_DIR})
-        endif()
-        set(${package}_GIT_FOUND 1 PARENT_SCOPE)
-        message("glfw added as a target")
-    endif()
 
     # bgfx, added by shrumo, BSD 2-Clause
     if (${package} STREQUAL bgfx)
@@ -81,40 +61,30 @@ function (find_git_package package)
 
         set(${package}_GIT_FOUND 1 PARENT_SCOPE)
         message("bgfx added as a target")
+        return()
     endif()
 
-    # glm, added by shrumo, Happy Bunny License (MIT, but you need to keep bunnies happy)
-    if (${package} STREQUAL glm)
-        message("glm was found, looking for version " ${version})
-        FetchContent_Declare(
-            glm
-            GIT_REPOSITORY https://github.com/g-truc/glm.git
-            GIT_TAG ${version}
-        )
-        FetchContent_GetProperties(glm)
-        if(NOT glm_POPULATED)
-          FetchContent_Populate(glm)
-          add_subdirectory(${glm_SOURCE_DIR} ${glm_BINARY_DIR})
+    foreach(entry IN LISTS cunta_database)
+        separate_arguments(entry)
+        list(GET entry 0 name)
+        list(GET entry 1 path)
+        
+        if (${package} STREQUAL ${name}) 
+            message("${name} was found in ${path}")
+            FetchContent_Declare(
+                ${name}
+                GIT_REPOSITORY ${path}
+                GIT_TAG ${version}
+            )
+            FetchContent_GetProperties(${name})
+            if(NOT ${name}_POPULATED)
+                FetchContent_Populate(${name})
+                add_subdirectory(${${name}_SOURCE_DIR} ${${name}_BINARY_DIR})
+            endif()
+            set(${package}_GIT_FOUND 1 PARENT_SCOPE)
+            return()
         endif()
-        set(${package}_GIT_FOUND 1 PARENT_SCOPE)
-        message("glm::glm added as a target")
-    endif()
+    endforeach(entry) 
 
-    # raylib, added by shrumo, zlib
-    if (${package} STREQUAL raylib)
-        message("raylib was found, looking for version " ${version})
-        FetchContent_Declare(
-            raylib
-            GIT_REPOSITORY https://github.com/raysan5/raylib.git
-            GIT_TAG ${version}
-        )
-        FetchContent_GetProperties(raylib)
-        if(NOT raylib_POPULATED)
-          FetchContent_Populate(raylib)
-          add_subdirectory(${raylib_SOURCE_DIR} ${raylib_BINARY_DIR})
-        endif()
-        set(${package}_GIT_FOUND 1 PARENT_SCOPE)
-        message("raylib added as a target")
-    endif()
-
+    
 endfunction()
