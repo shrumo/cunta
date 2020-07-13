@@ -6,13 +6,12 @@ This provides a CMake function, simililar to `find_package`, that will
 also fetch the packages from git (using `FetchContent`) that are not found. 
 
 You probably don't want to use this. Probably, you'd be better of with [Conan](https://conan.io/),
- [vcpkg](https://github.com/microsoft/vcpkg), or other package managers.
-
-I just started working on this and I have no idea whether this is possible, so don't hate. Thanks.
+ [vcpkg](https://github.com/microsoft/vcpkg), or other package managers. This builds the packages,
+offers no caching across projects and is generally just to improve prototyping speed.
 
 ## Example
 
-Imagine you want to get the great [fmt](https://github.com/fmtlib/fmt) (the only supported library now).
+Imagine you want to get the great [fmt](https://github.com/fmtlib/fmt).
 
 If you have cunta setup you would just write (in your `CMakeLists.txt`):
 
@@ -27,6 +26,10 @@ And that's it! You will use fmt from your system, if it is available and if not 
 ## Dependencies
 
 CMake 3.11 and above.
+
+## Adding stuff
+
+If you are interested (but I doubt it), feel free to send Pull Requests with more packages/fixes/ideas/anything.
 
 ## Setup
 
@@ -78,6 +81,7 @@ include(cmake/cunta.cmake)
 * bgfx
 * glm
 * raylib
+* Protobuf
 
 
 ## Problems

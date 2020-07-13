@@ -1,0 +1,7 @@
+syntax = "proto2";
+
+package example;
+
+message Greeting {
+    required string name = 1 [default = "World"];
+}
