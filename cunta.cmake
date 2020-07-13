@@ -22,7 +22,7 @@ function (find_or_fetch_package package)
         list(REMOVE_ITEM ARGV "REQUIRED")
     endif()
     
-    find_package(${ARGV})
+    find_package(${ARGV} QUIET)
     if (NOT ${${package}_FOUND}) 
         fetch_package_with_database(${ARGV})
     endif()

@@ -10,6 +10,7 @@ matrix:
             packages:
                 - cmake
                 - libfmt-dev
+                - libprotobuf-dev
 
 install:
     - cmake --version
