@@ -20,7 +20,6 @@ endfunction()
 # find_git_package(<package> [version] [QUIET] [REQUIRED])
 function (find_git_package package) 
     setup_cunta_database()
-    message("Looking up cunta database for " ${package} " " ${version})
 
     # Parse the first non specified argument
     if(${ARGC} GREATER "0")
@@ -28,6 +27,8 @@ function (find_git_package package)
             set(version ${ARGV1})
         endif()
     endif()
+
+    message("Looking up cunta database for " ${package} " " ${version})
 
     # Set the found variable to false 
     set(${package}_GIT_FOUND 0 PARENT_SCOPE)
