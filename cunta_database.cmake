@@ -18,8 +18,8 @@ endfunction()
 # Sets one variable in the parent scope:
 #   ${package}_FOUND_IN_CUNTA - whether the package was found in the database
 # This will do add_subdirectory on the fetched thing, to expose targets from the dependency.
-# fetch_from_cunta_database(<package> [version] [QUIET] [REQUIRED])
-function (fetch_from_cunta_database package) 
+# find_in_cunta_database(<package> [version] [QUIET] [REQUIRED])
+function (find_in_cunta_database package) 
     setup_cunta_database()
 
     # Parse the first non specified argument

@@ -13,9 +13,8 @@ function (fetch_package_with_database package)
         include(${cunta_database_SOURCE_DIR}/cunta_database.cmake)
     endif()
 
-    fetch_from_cunta_database(${ARGV})
+    find_in_cunta_database(${ARGV})
     set(${package}_FOUND_IN_CUNTA ${${package}_FOUND_IN_CUNTA} PARENT_SCOPE)
-    set(${package}_CUNTA_FETCHED_DIRECTORIES ${${package}_CUNTA_FETCHED_DIRECTORIES} PARENT_SCOPE)
 endfunction()
     
 
@@ -56,7 +55,6 @@ macro (find_or_fetch_package package)
         if(NOT "QUIET" IN_LIST ARGV)
             message(STATUS "${package} was found in cunta database")
         endif()
-        add_subdirectory(${${package}_CUNTA_FETCHED_DIRECTORIES} EXCLUDE_FROM_ALL)
         set(${package}_FOUND 1)
         unset(__cunta_${package}_required_)
         return() 
