@@ -14,11 +14,12 @@ function (setup_cunta_database)
     set(cunta_database ${cunta_database} PARENT_SCOPE)
 endfunction()
 
-# Looks for the package in a list of predefined git repositories.
-# Functions like a database saying how each project is defined and
-# can be fetched.
-# find_git_package(<package> [version] [QUIET] [REQUIRED])
-function (find_git_package package) 
+# Looks for the package in a list of predefined places.
+# Sets one variable in the parent scope:
+#   ${package}_FOUND_IN_CUNTA - whether the package was found in the database
+# This will do add_subdirectory on the fetched thing, to expose targets from the dependency.
+# fetch_from_cunta_database(<package> [version] [QUIET] [REQUIRED])
+function (fetch_from_cunta_database package) 
     setup_cunta_database()
 
     # Parse the first non specified argument
@@ -28,24 +29,24 @@ function (find_git_package package)
         endif()
     endif()
 
-    message("Looking up cunta database for " ${package} " " ${version})
+    message(VERBOSE "Looking up cunta database for ${package} ${version}")
 
     # Set the found variable to false 
-    set(${package}_GIT_FOUND 0 PARENT_SCOPE)
+    set(${package}_FOUND_IN_CUNTA 0 PARENT_SCOPE)
 
     # bgfx, added by shrumo, BSD 2-Clause
     if (${package} STREQUAL "bgfx")
         find_package(Git QUIET)
         
-        message("bgfx was found in https://github.com/widberg/bgfx.cmake.git")
+	    message(VERBOSE "bgfx was found in https://github.com/widberg/bgfx.cmake.git")
         if(NOT GIT_FOUND)
-            message(STATUS "bgfx requires git to be build by cunta")
+		    message(VERBOSE "bgfx requires git to be build by cunta")
         endif()
+
         FetchContent_Declare(
             bgfx
             GIT_REPOSITORY https://github.com/widberg/bgfx.cmake.git
         )
-    
         # Fetch the content 
         FetchContent_GetProperties(bgfx)
         if(NOT bgfx_POPULATED)
@@ -58,19 +59,17 @@ function (find_git_package package)
                         WORKING_DIRECTORY ${bgfx_SOURCE_DIR}
                         RESULT_VARIABLE GIT_SUBMOD_RESULT)
         if(NOT GIT_SUBMOD_RESULT EQUAL "0")
-            message(FATAL_ERROR "git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout bgfx submodules manually")
+            message(VERBOSE "git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout bgfx submodules manually")
         endif()
 
         add_subdirectory(${bgfx_SOURCE_DIR} ${bgfx_BINARY_DIR} EXCLUDE_FROM_ALL)
-
-        set(${package}_GIT_FOUND 1 PARENT_SCOPE)
-        message("bgfx added as a target")
+	    message(VERBOSE "bgfx added as a target")
         return()
     endif()
 
     # protobuf, added by shrumo, Google 
     if (${package} STREQUAL "Protobuf") 
-        message("Protobuf was found in https://github.com/protocolbuffers/protobuf.git")
+	    message(VERBOSE "Protobuf was found in https://github.com/protocolbuffers/protobuf.git")
         FetchContent_Declare(
             Protobuf
             GIT_REPOSITORY https://github.com/protocolbuffers/protobuf.git
@@ -79,9 +78,9 @@ function (find_git_package package)
         FetchContent_GetProperties(Protobuf)
         if(NOT protobuf_POPULATED)
             FetchContent_Populate(Protobuf)
-            add_subdirectory(${protobuf_SOURCE_DIR}/cmake ${protobuf_BINARY_DIR} EXCLUDE_FROM_ALL)
+            add_subdirectory(${protobuf_SOURCE_DIR}/cmake ${protobuf_BINARY_DIR} EXCLUDE_FROM_ALL)       
         endif()
-        set(${package}_GIT_FOUND 1 PARENT_SCOPE)
+        set(${package}_FOUND_IN_CUNTA 1 PARENT_SCOPE)
         return()
     endif()
 
@@ -91,7 +90,7 @@ function (find_git_package package)
         list(GET entry 1 path)
         
         if (${package} STREQUAL ${name}) 
-            message("${name} was found in ${path}")
+	    	message(VERBOSE "${name} was found in ${path}")
             FetchContent_Declare(
                 ${name}
                 GIT_REPOSITORY ${path}
@@ -102,10 +101,8 @@ function (find_git_package package)
                 FetchContent_Populate(${name})
                 add_subdirectory(${${name}_SOURCE_DIR} ${${name}_BINARY_DIR} EXCLUDE_FROM_ALL)
             endif()
-            set(${package}_GIT_FOUND 1 PARENT_SCOPE)
+            set(${package}_FOUND_IN_CUNTA 1 PARENT_SCOPE)
             return()
         endif()
     endforeach(entry) 
-
-    
 endfunction()

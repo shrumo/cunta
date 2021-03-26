@@ -3,7 +3,7 @@
 SCRIPT_LOCATION="$(pwd)/${0%/*}"
 cd ${SCRIPT_LOCATION}
 
-# Go through each test and try building it
+# Go through each test and try building it with the usual commands
 SUCCESS=true
 for package_test in $(ls ../tests)
 do
@@ -46,8 +46,7 @@ done
 
 
 # Print the result and leave with bad exit code if it failed
-if $SUCCESS
-then
+if $SUCCESS then
 echo "Tests succeeded"
 else
 echo "Tests failed"

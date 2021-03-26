@@ -87,7 +87,7 @@ include(cmake/cunta.cmake)
 * Protobuf
 
 
-## Problems
+## Known problems
 
 There is a problem, when a target with the same name is created by a previous import
 you cannot create it with the current import. Example:
