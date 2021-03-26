@@ -17,5 +17,4 @@ install:
     - cmake --version
 
 script:
-    - cd scripts
-    - ./test.sh
+    - scripts/test.sh
