@@ -1,54 +1,42 @@
-#!/bin/bash -v
+#!/bin/bash
 
-SCRIPT_LOCATION="$(pwd)/${0%/*}"
-cd ${SCRIPT_LOCATION}
+PROJECT_SOURCE_DIR="$(pwd)/${0%/*}/.."
 
 # Go through each test and try building it with the usual commands
 SUCCESS=true
-for package_test in $(ls ../tests)
+for package_test in $(ls ${PROJECT_SOURCE_DIR}/tests/)
 do
-    if [[ "$package_test" = 'README.md' ]]
+    if [[ "${package_test}" = 'README.md' ]]
     then
         continue
     fi
-    echo "----- Testing  $package_test -----"
-    cd ${SCRIPT_LOCATION}
-    cd ../tests/$package_test
+    echo "----- Testing  ${package_test} -----"
+    cd ${PROJECT_SOURCE_DIR}/tests/${package_test}
 
-    # Cleanup previous runs
-    rm build -rf
+    ./scripts/build.sh
+    if [[ $? -ne 0 ]]
+    then
+    echo "${package_test} failed on running scripts/build.sh"
+        SUCCESS=false
+        continue
+    fi
 
-    # Do the usual CMake building steps and verify they succeed
-    mkdir build
-    cd build
-    cmake .. 
+    ./scripts/run.sh
     if [[ $? -ne 0 ]]
     then
-        echo "${package_test} failed on cmake .."
+        echo "${package_test} failed on running scripts/run.sh"
         SUCCESS=false
         continue
-    fi
-    make -j4
-    if [[ $? -ne 0 ]]
-    then
-        echo "${package_test} failed on make"
-        SUCCESS=false
-        continue
-    fi
-    ./run
-    if [[ $? -ne 0 ]]
-    then
-        echo "${package_test} failed on running"
-        SUCCESS=false
     fi
     echo "${package_test} succeeded"
 done
 
 
 # Print the result and leave with bad exit code if it failed
-if $SUCCESS then
-echo "Tests succeeded"
+if $SUCCESS 
+then
+    echo "Tests succeeded"
 else
-echo "Tests failed"
-exit 1
+    echo "Tests failed"
+    exit 1
 fi

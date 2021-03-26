@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.11.4)
 
 project(cunta_protobuf_packaged_test)
-include(../../cunta.cmake)
+include(cmake/cunta.cmake)
 find_or_fetch_package(Protobuf REQUIRED)
 
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS greeting.proto)

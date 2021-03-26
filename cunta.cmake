@@ -17,58 +17,53 @@ function (fetch_package_with_database package)
     set(${package}_FOUND_IN_CUNTA ${${package}_FOUND_IN_CUNTA} PARENT_SCOPE)
 endfunction()
     
-
+# find_or_fetch_package(<PackageName> [version] [QUIET] [REQUIRED])
 macro (find_or_fetch_package package) 
+    # We rely on the version being present in ${CUNTA_FIND_OR_FETCH_PACKAGE_UNPARSED_ARGUMENTS}
+    cmake_parse_arguments(CUNTA_FIND_OR_FETCH_PACKAGE "QUIET;REQUIRED" "" "" ${ARGN})
+    set(${package}_FOUND 0)
+
     # Try looking for the package in submodules
     find_package(Git QUIET)
     if(${GIT_FOUND} AND EXISTS "${PROJECT_SOURCE_DIR}/.git" AND EXISTS "${PROJECT_SOURCE_DIR}/extern/${package}")
 	    add_subdirectory("${PROJECT_SOURCE_DIR}/extern/${package}") 
         set(${package}_FOUND 1)
-        if(NOT "QUIET" IN_LIST ARGV)
+        if(NOT CUNTA_FIND_OR_FETCH_PACKAGE_QUIET)
             message(STATUS "${package} found as a submodule")
         endif()
-        return()
     endif()
 
-    # Use a weird name for this variable to make sure there is no collision in
-    # the scope. This allows this to be macro. This name is unset in each path.
-    set(__cunta_${package}_required__ 0)
-    if("REQUIRED" IN_LIST ARGV)
-        set(__cunta_${package}_required__ 1)
-        list(REMOVE_ITEM ARGV "REQUIRED")
+    if(NOT ${${package}_FOUND})
+        # Try looking for the package in system packages
+        
+        find_package(${package} ${CUNTA_FIND_OR_FETCH_PACKAGE_UNPARSED_ARGUMENTS} QUIET)
+        if(${${package}_FOUND})
+            if(NOT CUNTA_FIND_OR_FETCH_PACKAGE_QUIET)
+                message(STATUS "${package} found in system packages")
+            endif()
+            set(${package}_FOUND 1)
+        endif()	
+    endif()
+   
+    if(NOT ${${package}_FOUND})
+        # Try looking for the package in the database
+        fetch_package_with_database(${ARGV})
+        if (${${package}_FOUND_IN_CUNTA})
+            if(NOT CUNTA_FIND_OR_FETCH_PACKAGE_QUIET)
+                message(STATUS "${package} was found in cunta database")
+            endif()
+            set(${package}_FOUND 1)
+        endif()
     endif()
 
-    # Try looking for the package in system packages
-    find_package(${ARGV} QUIET)
-    if(${${package}_FOUND})
-        if(NOT "QUIET" IN_LIST ARGV)
-            message(STATUS "${package} found in system packages")
+    if(NOT ${${package}_FOUND})
+        # Report error if the package is not found
+        if(CUNTA_FIND_OR_FETCH_PACKAGE_REQUIRED)
+                message(FATAL_ERROR "${package} not found.")
+        else()
+            if(NOT CUNTA_FIND_OR_FETCH_PACKAGE_QUIET)
+                message(STATUS "${package} not found.")
+            endif()
         endif()
-        unset(__cunta_${package}_required_)
-        set(${package}_FOUND 1)
-        return()
-    endif()	
-    
-    # Try looking for the package in the database
-    fetch_package_with_database(${ARGV})
-    if (${${package}_FOUND_IN_CUNTA})
-        if(NOT "QUIET" IN_LIST ARGV)
-            message(STATUS "${package} was found in cunta database")
-        endif()
-        set(${package}_FOUND 1)
-        unset(__cunta_${package}_required_)
-        return() 
-    endif()
-
-    # Report error if the package is not found
-    if(${__cunta_${package}_required__})
-            message(FATAL_ERROR "${package} not found.")
-    else()
-        if(NOT "QUIET" IN_LIST ARGV)
-            message(STATUS "${package} not found.")
-        endif()
-    endif()
-    
-    unset(__cunta_${package}_required_)
-    set(${package}_FOUND} 0)
+    endif()    
 endmacro()

@@ -22,14 +22,10 @@ endfunction()
 function (find_in_cunta_database package) 
     setup_cunta_database()
 
-    # Parse the first non specified argument
-    if(${ARGC} GREATER "0")
-        if(${ARGV1} MATCHES "^[0-9]*(\.[0-9]*(\.[0-9]*(\.[0-9]*)))$") 
-            set(version ${ARGV1})
-        endif()
-    endif()
+    # We rely on the version being present in ${CUNTA_FIND_IN_CUNTA_DATABASE_UNPARSED_ARGUMENTS}
+    cmake_parse_arguments(CUNTA_FIND_IN_CUNTA_DATABASE "QUIET;REQUIRED" "" "" ${ARGN})
 
-    message(VERBOSE "Looking up cunta database for ${package} ${version}")
+    message(VERBOSE "Looking up cunta database for ${package} ${CUNTA_FIND_IN_CUNTA_DATABASE_UNPARSED_ARGUMENTS}")
 
     # Set the found variable to false 
     set(${package}_FOUND_IN_CUNTA 0 PARENT_SCOPE)
@@ -38,9 +34,9 @@ function (find_in_cunta_database package)
     if (${package} STREQUAL "bgfx")
         find_package(Git QUIET)
         
-	    message(VERBOSE "bgfx was found in https://github.com/widberg/bgfx.cmake.git")
+        message(VERBOSE "bgfx was found in https://github.com/widberg/bgfx.cmake.git")
         if(NOT GIT_FOUND)
-		    message(VERBOSE "bgfx requires git to be build by cunta")
+            message(VERBOSE "bgfx requires git to be build by cunta")
         endif()
 
         FetchContent_Declare(
@@ -63,13 +59,13 @@ function (find_in_cunta_database package)
         endif()
 
         add_subdirectory(${bgfx_SOURCE_DIR} ${bgfx_BINARY_DIR} EXCLUDE_FROM_ALL)
-	    message(VERBOSE "bgfx added as a target")
+        message(VERBOSE "bgfx added as a target")
         return()
     endif()
 
     # protobuf, added by shrumo, Google 
     if (${package} STREQUAL "Protobuf") 
-	    message(VERBOSE "Protobuf was found in https://github.com/protocolbuffers/protobuf.git")
+        message(VERBOSE "Protobuf was found in https://github.com/protocolbuffers/protobuf.git")
         FetchContent_Declare(
             Protobuf
             GIT_REPOSITORY https://github.com/protocolbuffers/protobuf.git
@@ -90,7 +86,7 @@ function (find_in_cunta_database package)
         list(GET entry 1 path)
         
         if (${package} STREQUAL ${name}) 
-	    	message(VERBOSE "${name} was found in ${path}")
+            message(VERBOSE "${name} was found in ${path}")
             FetchContent_Declare(
                 ${name}
                 GIT_REPOSITORY ${path}
