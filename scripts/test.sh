@@ -6,10 +6,11 @@ PROJECT_SOURCE_DIR="$(pwd)/${0%/*}/.."
 SUCCESS=true
 for package_test in $(ls ${PROJECT_SOURCE_DIR}/tests/)
 do
-    if [[ "${package_test}" = 'README.md' ]]
-    then
-        continue
-    fi
+    case ${package_test} in
+	    "README.md") continue;;
+	    "glfw"|"raylib") if [ -z ${CI+x} ]; then continue; fi;;
+            *)
+    esac
     echo "----- Testing ${package_test} -----"
     cd ${PROJECT_SOURCE_DIR}/tests/${package_test}
 
