@@ -46,20 +46,19 @@ function (find_in_cunta_database package)
         # Fetch the content 
         FetchContent_GetProperties(bgfx)
         if(NOT bgfx_POPULATED)
-          FetchContent_Populate(bgfx)
-        endif()       
+          	FetchContent_Populate(bgfx)
 
-        # We need to initialize the submodules 
-        # Update submodules as needed
-        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+          	# We need to initialize the submodules 
+        	# Update submodules as needed
+        	execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
                         WORKING_DIRECTORY ${bgfx_SOURCE_DIR}
                         RESULT_VARIABLE GIT_SUBMOD_RESULT)
-        if(NOT GIT_SUBMOD_RESULT EQUAL "0")
-            message(VERBOSE "git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout bgfx submodules manually")
-        endif()
-
-        add_subdirectory(${bgfx_SOURCE_DIR} ${bgfx_BINARY_DIR} EXCLUDE_FROM_ALL)
-        message(VERBOSE "bgfx added as a target")
+        	if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+            	message(VERBOSE "git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout bgfx submodules manually")
+        	endif()
+        	add_subdirectory(${bgfx_SOURCE_DIR} ${bgfx_BINARY_DIR} EXCLUDE_FROM_ALL)
+        endif()       
+        set(${package}_FOUND_IN_CUNTA 1 PARENT_SCOPE)
         return()
     endif()
 

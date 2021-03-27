@@ -34,8 +34,7 @@ macro (find_or_fetch_package package)
     endif()
 
     if(NOT ${${package}_FOUND})
-        # Try looking for the package in system packages
-        
+        # Try looking for the package in system packages        
         find_package(${package} ${CUNTA_FIND_OR_FETCH_PACKAGE_UNPARSED_ARGUMENTS} QUIET)
         if(${${package}_FOUND})
             if(NOT CUNTA_FIND_OR_FETCH_PACKAGE_QUIET)
@@ -45,7 +44,7 @@ macro (find_or_fetch_package package)
         endif()
     endif()
    
-    if(NOT ${${package}_FOUND})
+    if(NOT ${${package}_FOUND})	
         # Try looking for the package in the database
         fetch_package_with_database(${ARGV})
         if (${${package}_FOUND_IN_CUNTA})
