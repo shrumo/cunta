@@ -33,9 +33,12 @@ int main(void)
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
 
+    int framesToShow = 600;
+
     // Main game loop
-    while (!WindowShouldClose())    // Detect window close button or ESC key
+    while (framesToShow > 0 && !WindowShouldClose())    // Detect window close button or ESC key
     {
+	framesToShow--;
         // Update
         //----------------------------------------------------------------------------------
         // TODO: Update your variables here
