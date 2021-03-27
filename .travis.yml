@@ -14,10 +14,7 @@ matrix:
                 - protobuf-compiler # protobuf-packaged
                 - libgles2-mesa-dev # raylib, glfw
                 - libegl1-mesa-dev # raylib, glfw
-                - libxrandr-dev # raylib, glfw
-                - libxinerama-dev # raylib, glfw
-                - libxcursor-dev # raylib, glfw
-                - libxi-dev # raylib, glfw
+                - xorg-dev # raylib, glfw
 install:
     - cmake --version
 
