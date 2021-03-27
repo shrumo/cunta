@@ -90,7 +90,7 @@ function (find_in_cunta_database package)
 		    FetchContent_Populate(glm)
 		    add_subdirectory(${glm_SOURCE_DIR} ${glm_BINARY_DIR} EXCLUDE_FROM_ALL)
             # A trick to make link glm headers to the target properly
-            target_include_directories(glm::glm INTERFACE $<BUILD_INTERFACE:${glm_SOURCE_DIR}>) 
+            target_include_directories(glm INTERFACE $<BUILD_INTERFACE:${glm_SOURCE_DIR}>) 
 	    endif()
 	    set(${package}_FOUND_IN_CUNTA 1 PARENT_SCOPE)
 	    return()

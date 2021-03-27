@@ -8,7 +8,7 @@ for package_test in $(ls ${PROJECT_SOURCE_DIR}/tests/)
 do
     case ${package_test} in
 	    "README.md") continue;;
-	    "glfw"|"raylib"|"bgfx") if [ ! -z ${CI} ]; then continue; fi;; # Omit some tests in CI, as they require a display
+	    "glfw"|"raylib"|"bgfx","raylib_glm_fmt") if [ ! -z ${CI} ]; then continue; fi;; # Omit some tests in CI, as they require a display
             *)
     esac
     echo "----- Testing ${package_test} -----"
