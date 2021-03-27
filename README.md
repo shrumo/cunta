@@ -21,7 +21,8 @@ include(cmake/cunta.cmake)
 find_or_fetch_package(fmt)
 ```
 
-And that's it! You will use fmt from your system, if it is available and if not you will build it from sources.
+And that's it! You will use fmt from your system, if it is available and if not you will build it from sources. 
+It will also look into `extern` directory whether the package is there as a git submodule.
 
 ## Dependencies
 
@@ -70,7 +71,7 @@ So you have it somewhere:
     └── cunta.cmake
 ```
 
-Then in your `CMakeLists.txt` you od:
+Then in your `CMakeLists.txt` you do:
 
 ```
 include(cmake/cunta.cmake)
@@ -89,8 +90,7 @@ include(cmake/cunta.cmake)
 
 ## Known problems
 
-There is a problem, when a target with the same name is created by a previous import
-you cannot create it with the current import. Example:
+If the project shares a dependency with other imported package there might be a conflict. Example:
 
 ```
 find_or_fetch_package(raylib)
