@@ -12,6 +12,8 @@ matrix:
                 - libfmt-dev
                 - libprotobuf-dev
                 - protobuf-compiler
+                - libgles2-mesa-dev
+                - libegl1-mesa-dev
 
 install:
     - cmake --version

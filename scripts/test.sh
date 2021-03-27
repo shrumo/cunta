@@ -10,7 +10,7 @@ do
     then
         continue
     fi
-    echo "----- Testing  ${package_test} -----"
+    echo "----- Testing ${package_test} -----"
     cd ${PROJECT_SOURCE_DIR}/tests/${package_test}
 
     ./scripts/build.sh
