@@ -14,6 +14,14 @@ do
     echo "----- Testing ${package_test} -----"
     cd ${PROJECT_SOURCE_DIR}/tests/${package_test}
 
+    ./scripts/clean.sh
+    if [[ $? -ne 0 ]]
+    then
+    echo "${package_test} failed on running scripts/clean.sh"
+        SUCCESS=false
+        continue
+    fi
+
     ./scripts/build.sh
     if [[ $? -ne 0 ]]
     then
@@ -29,6 +37,15 @@ do
         SUCCESS=false
         continue
     fi
+
+    ./scripts/clean.sh
+    if [[ $? -ne 0 ]]
+    then
+    echo "${package_test} failed on running scripts/clean.sh"
+        SUCCESS=false
+        continue
+    fi
+
     echo "${package_test} succeeded"
 done
 
