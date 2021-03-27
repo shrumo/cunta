@@ -16,7 +16,7 @@ matrix:
                 - libegl1-mesa-dev # raylib, glfw
                 - libxrandr-dev # raylib, glfw
                 - libxinerama-dev # raylib, glfw
-
+                - libxcursor-dev # raylib, glfw
 install:
     - cmake --version
 
