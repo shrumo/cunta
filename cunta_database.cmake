@@ -4,8 +4,6 @@ function (setup_cunta_database)
     list(APPEND cunta_database "fmt https://github.com/fmtlib/fmt.git") 
     # glfw3, added by shrumo, zlib/libpng
     list(APPEND cunta_database "glfw3 https://github.com/glfw/glfw.git")
-    # glm, added by shrumo, Happy Bunny License (MIT, but you need to keep bunnies happy)
-    list(APPEND cunta_database "glm https://github.com/g-truc/glm.git")
     # raylib, added by shrumo, zlib
     list(APPEND cunta_database "raylib https://github.com/raysan5/raylib.git")
     # protobuf, added by shrumo, Google 
@@ -77,6 +75,25 @@ function (find_in_cunta_database package)
         endif()
         set(${package}_FOUND_IN_CUNTA 1 PARENT_SCOPE)
         return()
+    endif()
+
+    # glm, added by shrumo, Happy Bunny License (MIT, but you need to keep bunnies happy)
+    if (${package} STREQUAL "glm") 
+	    message(VERBOSE "glm was found in glm https://github.com/g-truc/glm.git")
+	    FetchContent_Declare(
+		    glm
+		    GIT_REPOSITORY https://github.com/g-truc/glm.git
+		    GIT_TAG ${version}
+	    )
+	    FetchContent_GetProperties(glm)
+	    if(NOT glm_POPULATED)
+		    FetchContent_Populate(glm)
+		    add_subdirectory(${glm_SOURCE_DIR} ${glm_BINARY_DIR} EXCLUDE_FROM_ALL)
+            # A trick to make link glm headers to the target properly
+            target_include_directories(glm::glm INTERFACE $<BUILD_INTERFACE:${glm_SOURCE_DIR}>) 
+	    endif()
+	    set(${package}_FOUND_IN_CUNTA 1 PARENT_SCOPE)
+	    return()
     endif()
 
     foreach(entry IN LISTS cunta_database)
