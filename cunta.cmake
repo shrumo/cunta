@@ -24,6 +24,7 @@ macro (find_or_fetch_package package)
     set(${package}_FOUND 0)
 
     # Try looking for the package in submodules
+    # Note that this requires the submodule folder to be named in the same way as the package
     find_package(Git QUIET)
     if(${GIT_FOUND} AND EXISTS "${PROJECT_SOURCE_DIR}/.git" AND EXISTS "${PROJECT_SOURCE_DIR}/extern/${package}")
         add_subdirectory("${PROJECT_SOURCE_DIR}/extern/${package}") 

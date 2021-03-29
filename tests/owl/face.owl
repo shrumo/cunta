@@ -1,0 +1,14 @@
+ # Here's an example grammar: (from the cool interactive example)
+face = eyes nose mouth
+eyes =
+  ':' : normal
+  ';' : winking
+nose =
+  '' : none
+  '-' : straight
+  '^' : pointy
+  '*' : clown
+mouth =
+  ')' : smile
+  '(' : frown
+  'D' : open-smile

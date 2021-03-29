@@ -1,14 +1,15 @@
 # Sets up the database for things that are simple to fetch from git
 function (setup_cunta_database) 
     # fmt, added by shrumo, MIT license
-    list(APPEND cunta_database "fmt https://github.com/fmtlib/fmt.git") 
+    list(APPEND cunta_database "PACKAGE fmt LINK https://github.com/fmtlib/fmt.git") 
     # glfw3, added by shrumo, zlib/libpng
-    list(APPEND cunta_database "glfw3 https://github.com/glfw/glfw.git")
+    list(APPEND cunta_database "PACKAGE glfw3 LINK https://github.com/glfw/glfw.git")
     # raylib, added by shrumo, zlib
-    list(APPEND cunta_database "raylib https://github.com/raysan5/raylib.git")
+    list(APPEND cunta_database "PACKAGE raylib LINK https://github.com/raysan5/raylib.git")
     # protobuf, added by shrumo, Google 
-    list(APPEND cunta_database "Protobuf https://github.com/protocolbuffers/protobuf.git")
-
+    list(APPEND cunta_database "PACKAGE Protobuf LINK https://github.com/protocolbuffers/protobuf.git")
+    # owl, added by shrumo, MIT
+    list(APPEND cunta_database "PACKAGE owl LINK https://github.com/shrumo/owl-cmake.git DEFAULT_TAG main")
     set(cunta_database ${cunta_database} PARENT_SCOPE)
 endfunction()
 
@@ -66,7 +67,7 @@ function (find_in_cunta_database package)
         FetchContent_Declare(
             Protobuf
             GIT_REPOSITORY https://github.com/protocolbuffers/protobuf.git
-            GIT_TAG ${version}
+            GIT_TAG ${CUNTA_FIND_IN_CUNTA_DATABASE_UNPARSED_ARGUMENTS}
         )
         FetchContent_GetProperties(Protobuf)
         if(NOT protobuf_POPULATED)
@@ -83,7 +84,7 @@ function (find_in_cunta_database package)
 	    FetchContent_Declare(
 		    glm
 		    GIT_REPOSITORY https://github.com/g-truc/glm.git
-		    GIT_TAG ${version}
+		    GIT_TAG ${CUNTA_FIND_IN_CUNTA_DATABASE_UNPARSED_ARGUMENTS}
 	    )
 	    FetchContent_GetProperties(glm)
 	    if(NOT glm_POPULATED)
@@ -97,21 +98,25 @@ function (find_in_cunta_database package)
     endif()
 
     foreach(entry IN LISTS cunta_database)
-        separate_arguments(entry)
-        list(GET entry 0 name)
-        list(GET entry 1 path)
+        string(REPLACE " " ";" entry_list ${entry})
+        cmake_parse_arguments(CUNTA_ENTRY "" "PACKAGE;LINK;DEFAULT_TAG" "" ${entry_list}) 
+
+        set(tag ${CUNTA_ENTRY_DEFAULT_TAG})
+        if(DEFINED ${CUNTA_FIND_IN_CUNTA_DATABASE_UNPARSED_ARGUMENTS})
+            set(tag ${CUNTA_FIND_IN_CUNTA_DATABASE_UNPARSED_ARGUMENTS})
+        endif()
         
-        if (${package} STREQUAL ${name}) 
-            message(VERBOSE "${name} was found in ${path}")
+        if (${package} STREQUAL ${CUNTA_ENTRY_PACKAGE}) 
+            message(VERBOSE "${package} was found in ${path}")
             FetchContent_Declare(
-                ${name}
-                GIT_REPOSITORY ${path}
-                GIT_TAG ${version}
+                ${CUNTA_ENTRY_PACKAGE}
+                GIT_REPOSITORY ${CUNTA_ENTRY_LINK}
+                GIT_TAG ${tag}
             )
-            FetchContent_GetProperties(${name})
-            if(NOT ${name}_POPULATED)
-                FetchContent_Populate(${name})
-                add_subdirectory(${${name}_SOURCE_DIR} ${${name}_BINARY_DIR} EXCLUDE_FROM_ALL)
+            FetchContent_GetProperties(${CUNTA_ENTRY_PACKAGE})
+            if(NOT ${CUNTA_ENTRY_PACKAGE}_POPULATED)
+                FetchContent_Populate(${CUNTA_ENTRY_PACKAGE})
+                add_subdirectory(${${CUNTA_ENTRY_PACKAGE}_SOURCE_DIR} ${${CUNTA_ENTRY_PACKAGE}_BINARY_DIR} EXCLUDE_FROM_ALL)
             endif()
             set(${package}_FOUND_IN_CUNTA 1 PARENT_SCOPE)
             return()
