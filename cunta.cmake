@@ -25,8 +25,18 @@ macro (find_or_fetch_package package)
 
     # Try looking for the package in submodules
     # Note that this requires the submodule folder to be named in the same way as the package
-    find_package(Git QUIET)
-    if(${GIT_FOUND} AND EXISTS "${PROJECT_SOURCE_DIR}/.git" AND EXISTS "${PROJECT_SOURCE_DIR}/extern/${package}")
+    if(EXISTS "${PROJECT_SOURCE_DIR}/extern/${package}")
+        if(NOT EXISTS "${PROJECT_SOURCE_DIR}/extern/${package}/CMakeLists.txt")
+            find_package(Git QUIET)
+            if (GIT FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+                execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+                                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                                RESULT_VARIABLE GIT_SUBMOD_RESULT)
+                if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+                    message(VERBOSE "git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+                endif()
+            endif()
+        endif()
         add_subdirectory("${PROJECT_SOURCE_DIR}/extern/${package}") 
         set(${package}_FOUND 1)
         if(NOT CUNTA_FIND_OR_FETCH_PACKAGE_QUIET)
@@ -34,7 +44,7 @@ macro (find_or_fetch_package package)
         endif()
     endif()
 
-    if(NOT ${${package}_FOUND})
+    if(NOT ${package}_FOUND)
         # Try looking for the package in system packages        
         find_package(${package} ${CUNTA_FIND_OR_FETCH_PACKAGE_UNPARSED_ARGUMENTS} QUIET)
         if(${${package}_FOUND})
@@ -45,7 +55,7 @@ macro (find_or_fetch_package package)
         endif()
     endif()
    
-    if(NOT ${${package}_FOUND})	
+    if(NOT ${package}_FOUND)	
         # Try looking for the package in the database
         fetch_package_with_database(${ARGV})
         if (${${package}_FOUND_IN_CUNTA})
@@ -56,7 +66,7 @@ macro (find_or_fetch_package package)
         endif()
     endif()
 
-    if(NOT ${${package}_FOUND})
+    if(NOT ${package}_FOUND)
         # Report error if the package is not found
         if(CUNTA_FIND_OR_FETCH_PACKAGE_REQUIRED)
                 message(FATAL_ERROR "${package} not found.")
