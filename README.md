@@ -24,6 +24,12 @@ find_or_fetch_package(fmt)
 And that's it! You will use fmt from your system, if it is available and if not you will build it from sources. 
 It will also look into `extern` directory whether the package is there as a git submodule.
 
+**But where does it take the package from?**
+
+1. It checks the submodules in `extern/` to try and find package there (add it as [add_subdirectory](https://cmake.org/cmake/help/latest/command/add_subdirectory.html) if that is the case)
+2. If it's not found in submodules it looks for tha package with [find_package](https://cmake.org/cmake/help/latest/command/find_package.html).
+3. If it's not found in submodules and not in the system, then it fetches the git repository (with [fetch_content](https://cmake.org/cmake/help/latest/module/FetchContent.html)) into and does [add_subdirectory](https://cmake.org/cmake/help/latest/command/add_subdirectory.html) on it.
+
 ## Dependencies
 
 CMake 3.11 and above and git for packages that require submodules. 
