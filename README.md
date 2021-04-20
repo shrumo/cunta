@@ -86,12 +86,13 @@ include(cmake/cunta.cmake)
 
 ## Currently supported
 
-* fmt
-* glfw3
-* bgfx
-* glm
-* raylib
-* Protobuf
+* [fmt](https://github.com/fmtlib/fmt)
+* [glfw3](https://github.com/glfw/glfw)
+* [bgfx](https://github.com/widberg/bgfx.cmake)
+* [glm](https://github.com/g-truc/glm)
+* [raylib](https://github.com/raysan5/raylib)
+* [Protobuf](https://github.com/protocolbuffers/protobuf)
+* [owl](https://github.com/shrumo/owl-cmake)
 
 
 ## Known problems
