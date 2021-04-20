@@ -7,13 +7,13 @@ cd ${PROJECT_SOURCE_DIR}
 git init
 
 # Setup the submodule
-mkdir ${PROJECT_SOURCE_DIR}/extern
+mkdir -p ${PROJECT_SOURCE_DIR}/extern
 cd ${PROJECT_SOURCE_DIR}/extern
 git submodule add https://github.com/fmtlib/fmt.git
 
 # Build the thing
 cd ${PROJECT_SOURCE_DIR}
-mkdir build
+mkdir -p build
 cd build
 cmake ..
 make -j4

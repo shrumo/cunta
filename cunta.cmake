@@ -28,7 +28,7 @@ macro (find_or_fetch_package package)
     if(EXISTS "${PROJECT_SOURCE_DIR}/extern/${package}")
         if(NOT EXISTS "${PROJECT_SOURCE_DIR}/extern/${package}/CMakeLists.txt")
             find_package(Git QUIET)
-            if (GIT FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+            if (GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
                 execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
                                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                                 RESULT_VARIABLE GIT_SUBMOD_RESULT)
