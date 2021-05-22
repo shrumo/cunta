@@ -33,14 +33,14 @@ function (find_in_cunta_database package)
     if (${package} STREQUAL "bgfx")
         find_package(Git QUIET)
         
-        message(VERBOSE "bgfx was found in https://github.com/widberg/bgfx.cmake.git")
+        message(VERBOSE "bgfx was found in https://github.com/bkaradzic/bgfx.cmake.git")
         if(NOT GIT_FOUND)
             message(VERBOSE "bgfx requires git to be build by cunta")
         endif()
 
         FetchContent_Declare(
             bgfx
-            GIT_REPOSITORY https://github.com/widberg/bgfx.cmake.git
+            GIT_REPOSITORY https://github.com/bkaradzic/bgfx.cmake.git
         )
         # Fetch the content 
         FetchContent_GetProperties(bgfx)
