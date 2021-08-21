@@ -88,7 +88,7 @@ include(cmake/cunta.cmake)
 
 * [fmt](https://github.com/fmtlib/fmt)
 * [glfw3](https://github.com/glfw/glfw)
-* [bgfx](https://github.com/bkaradzic/bgfx.cmake)
+* [bgfx](https://github.com/bkaradzic/bgfx.cmake) <- b0rked, some error with including bx/bx.h, need fix
 * [glm](https://github.com/g-truc/glm)
 * [raylib](https://github.com/raysan5/raylib)
 * [Protobuf](https://github.com/protocolbuffers/protobuf)
