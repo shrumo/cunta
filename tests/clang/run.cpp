@@ -15,6 +15,7 @@ int main()
     cerr << "Unable to parse translation unit. Quitting." << endl;
     exit(-1);
   }
+  cout << "Things worked." << endl;
 
   clang_disposeTranslationUnit(unit);
   clang_disposeIndex(index);
