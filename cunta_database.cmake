@@ -20,6 +20,13 @@ endfunction()
 # find_in_cunta_database(<package> [version] [QUIET] [REQUIRED])
 function (find_in_cunta_database package) 
     setup_cunta_database()
+    
+    find_package(Git QUIET)
+        
+    if(NOT GIT_FOUND)
+        message(VERBOSE "cunta database requires git to be installed")
+    endif()
+
 
     # We rely on the version being present in ${CUNTA_FIND_IN_CUNTA_DATABASE_UNPARSED_ARGUMENTS}
     cmake_parse_arguments(CUNTA_FIND_IN_CUNTA_DATABASE "QUIET;REQUIRED" "" "" ${ARGN})
@@ -31,12 +38,7 @@ function (find_in_cunta_database package)
 
     # bgfx, added by shrumo, BSD 2-Clause
     if (${package} STREQUAL "bgfx")
-        find_package(Git QUIET)
-        
         message(VERBOSE "bgfx was found in https://github.com/bkaradzic/bgfx.cmake.git")
-        if(NOT GIT_FOUND)
-            message(VERBOSE "bgfx requires git to be build by cunta")
-        endif()
 
         FetchContent_Declare(
             bgfx
@@ -57,6 +59,24 @@ function (find_in_cunta_database package)
         	endif()
         	add_subdirectory(${bgfx_SOURCE_DIR} ${bgfx_BINARY_DIR} EXCLUDE_FROM_ALL)
         endif()       
+        set(${package}_FOUND_IN_CUNTA 1 PARENT_SCOPE)
+        return()
+    endif()
+
+    # llvm, added by shrumo, Apache License v2.0 with LLVM Exceptions
+    if (${package} STREQUAL "LLVM")
+        message(VERBOSE "LLVM was found in https://github.com/llvm/llvm-project.git")
+
+        FetchContent_Declare(
+            LLVM
+            GIT_REPOSITORY https://github.com/llvm/llvm-project.git
+        ) 
+        # Fetch the content 
+        FetchContent_GetProperties(LLVM)
+        if(NOT LLVM_POPULATED)
+            FetchContent_Populate(LLVM)
+            add_subdirectory(${LLVM_SOURCE_DIR}/llvm/ ${LLVM_BINARY_DIR} EXCLUDE_FROM_ALL)
+        endif()
         set(${package}_FOUND_IN_CUNTA 1 PARENT_SCOPE)
         return()
     endif()
