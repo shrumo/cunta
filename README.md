@@ -99,6 +99,7 @@ include(cmake/cunta.cmake)
 * [raylib](https://github.com/raysan5/raylib)
 * [Protobuf](https://github.com/protocolbuffers/protobuf)
 * [owl](https://github.com/shrumo/owl-cmake)
+* [absl](https://github.com/abseil/abseil-cpp)
 
 ## Known problems
 

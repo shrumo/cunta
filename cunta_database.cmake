@@ -10,6 +10,8 @@ function (setup_cunta_database)
     list(APPEND cunta_database "PACKAGE Protobuf LINK https://github.com/protocolbuffers/protobuf.git")
     # owl, added by shrumo, MIT
     list(APPEND cunta_database "PACKAGE owl LINK https://github.com/shrumo/owl-cmake.git DEFAULT_TAG main")
+    # abseil, added by shrumo, Apache License 2.0
+    list(APPEND cunta_database "PACKAGE absl LINK https://github.com/abseil/abseil-cpp.git")
     set(cunta_database ${cunta_database} PARENT_SCOPE)
 endfunction()
 
